@@ -36,7 +36,8 @@ export const isGitDirectory = async (path: string) => {
     }
 }
 
-export const getGitDirectories = async (path: string) => {
+export const getGitDirectories = async (path: string): Promise<string[]> => {
+    if (await isGitDirectory(path)) return [path];
     const dirs = await getDirectories(path);
     const gitDirs = await filterAsync(dirs, isGitDirectory)
     return gitDirs

@@ -11,8 +11,7 @@ async function main() {
     const program = createProgram()
 
     await program
-        .name("git-for-each")
-        .alias("git-fe")
+        .name("git-dir")
         .version(version)
         .parseAsync(process.argv);
 

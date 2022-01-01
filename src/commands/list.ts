@@ -8,9 +8,8 @@ export const listCmd = new Command('list')
     .action(async (cmd) => {
 
         const choices = [
-            ...commands.map(cmd => cmd.name),
+            ...commands.map(cmd => cmd.name()),
             "help",
-            "version"
         ]
 
         const questions = [{
