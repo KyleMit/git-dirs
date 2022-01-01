@@ -3,12 +3,6 @@
 > Run git commands in all git subdirectories
 
 
-## Possible Names
-
-* git-each
-* git-for-each
-* git-fe
-* git-dir
 
 ## Features
 
@@ -33,6 +27,11 @@
 * Chalk
 * Params, pass in dir to override (defaults to `./`)
 * Exec Child
+* Speed up npx download time
+  * Remove dependencies
+  * Bundle Code
+  * Don't ship anything client doesn't need
+* Fix `RangeError [ERR_CHILD_PROCESS_STDIO_MAXBUFFER]: stdout maxBuffer length exceeded`
 
 ## Commands
 
@@ -48,6 +47,13 @@ git-fe clean -dX
 
 git-fe xargs <whatever>
 ```
+
+## Possible Names
+
+* git-each
+* git-for-each
+* git-fe
+* git-dir
 
 ## Prior Art
 

@@ -1,6 +1,5 @@
-import chalk from "chalk";
 import { Command, Option } from "commander"
-import { getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, IGitStatusInfo, mapAsync } from "../utils"
+import { getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, IGitStatusInfo, mapAsync, printBlue, printBold, printGreen } from "../utils"
 
 enum StatusSortTypes {
     status = "status",
@@ -31,12 +30,11 @@ export const statusCmd = new Command('status')
 
         statusSorted.forEach(repo => {
             if (repo.isDirty) {
-                console.log(chalk.bold.blue(repo.name))
+                console.log(printBold(printBlue(repo.name)))
                 console.log(repo.status)
                 console.log()
-            }
-            if (opts.showAll) {
-                console.log(chalk.bold.green(repo.name))
+            } else if (opts.showAll) {
+                console.log(printGreen(repo.name))
             }
         })
 
