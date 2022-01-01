@@ -1,6 +1,6 @@
 {
   "name": "git-dirs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Run git commands in all git subdirectories",
   "bin": "./lib/index.js",
   "scripts": {
