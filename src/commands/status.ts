@@ -18,11 +18,9 @@ export const statusCmd = new Command('status')
     .option('-a, --show-all', 'show all repo statuses')
     .addOption(new Option('-s, --sort <order>', 'sort order').choices(Object.values(StatusSortTypes)).default(StatusSortTypes.status))
     .action(async (opts: IStatusOptions) => {
+
         const dir = opts.dir || getCurrentWorkingDirectory()
         const gitDirs = await getGitDirectories(dir);
-
-        console.log({dir, gitDirs})
-
         const gitStatuses = await mapAsync(gitDirs, getGitStatusInfo)
 
         const sortFunc = opts.sort === StatusSortTypes.alpha
