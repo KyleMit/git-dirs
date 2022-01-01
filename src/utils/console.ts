@@ -34,4 +34,5 @@ export const colors = {
 export const printDim = (text: string) => `${colors.dim}${text}${colors.reset}`;
 export const printBold = (text: string) => `${colors.bright}${text}${colors.reset}`;
 export const printBlue = (text: string) => `${colors.fg.blue}${text}${colors.reset}`;
+export const printRed = (text: string) => `${colors.fg.red}${text}${colors.reset}`;
 export const printGreen = (text: string) => `${colors.fg.green}${text}${colors.reset}`;

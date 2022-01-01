@@ -1,5 +1,5 @@
 import { Command, Option } from "commander"
-import { getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, IGitStatusInfo, mapAsync, printBlue, printBold, printGreen } from "../utils"
+import { boolCompare, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, IGitStatusInfo, mapAsync, printBlue, printBold, printGreen, printRed } from "../utils"
 
 enum StatusSortTypes {
     status = "status",
@@ -24,14 +24,18 @@ export const statusCmd = new Command('status')
 
         const sortFunc = opts.sort === StatusSortTypes.alpha
             ? (a: IGitStatusInfo, b:IGitStatusInfo) => a.name.localeCompare(b.name)
-            : (a: IGitStatusInfo, b:IGitStatusInfo) => Number(b.isDirty) - Number(a.isDirty)
+            : (a: IGitStatusInfo, b:IGitStatusInfo) => boolCompare(b.tooManyChanges, a.tooManyChanges) || boolCompare(b.isDirty, a.isDirty)
 
         const statusSorted = gitStatuses.sort(sortFunc)
 
         statusSorted.forEach(repo => {
             if (repo.isDirty) {
                 console.log(printBold(printBlue(repo.name)))
-                console.log(repo.status)
+                if (repo.tooManyChanges) {
+                    console.log(printRed(`Too many changes - run manually with:\n$ git -C '${repo.path}' status`))
+                } else {
+                    console.log(repo.status)
+                }
                 console.log()
             } else if (opts.showAll) {
                 console.log(printGreen(repo.name))

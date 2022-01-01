@@ -7,16 +7,30 @@ export interface IGitRepo {
 export interface IGitStatusInfo extends IGitRepo {
     status: string;
     isDirty: boolean;
+    tooManyChanges: boolean;
 }
 
 export const getGitStatusInfo = async (path: string): Promise<IGitStatusInfo> => {
-    const status = await getGitStatus(path)
-    return {
-        name: getDirectoryName(path),
-        path,
-        status,
-        isDirty: status != ""
+    const name = getDirectoryName(path);
+    try {
+        const status = await getGitStatus(path)
+        return {
+            name,
+            path,
+            status,
+            isDirty: status != "",
+            tooManyChanges: status.length > 1_000
+        }
+    } catch (error) {
+        return {
+            name,
+            path,
+            status: 'Too Many Changes',
+            isDirty: true,
+            tooManyChanges: true
+        }
     }
+
 }
 
 export const getGitStatus = async (path: string) => {

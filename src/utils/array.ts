@@ -6,3 +6,5 @@ export const filterAsync = async <T>(array: T[], callbackfn: (value: T, index: n
     const filterMap = await mapAsync(array, callbackfn);
     return array.filter((_, index) => filterMap[index]);
 }
+
+export const boolCompare = (a: boolean, b: boolean) => Number(a) - Number(b)
