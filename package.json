@@ -12,7 +12,7 @@
     "predeploy": "npm run build",
     "deploy": "npm publish --access public"
   },
-  "repository": "github:KyleMit/git-for-each",
+  "repository": "github:KyleMit/git-dirs",
   "keywords": [
     "git",
     "cli",
@@ -21,9 +21,9 @@
   "author": "KyleMit",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KyleMit/git-for-each/issues"
+    "url": "https://github.com/KyleMit/git-dirs/issues"
   },
-  "homepage": "https://github.com/KyleMit/git-for-each#readme",
+  "homepage": "https://github.com/KyleMit/git-dirs#readme",
   "dependencies": {
     "commander": "^8.3.0"
   },

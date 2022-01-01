@@ -1,4 +1,4 @@
-# Git For Each
+# Git Dirs
 
 > Run git commands in all git subdirectories
 
