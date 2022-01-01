@@ -4,10 +4,8 @@
   "description": "Run git commands in all git subdirectories",
   "bin": "./lib/index.js",
   "scripts": {
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "local": "npm i . -g && git-dirs",
-    "status": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\github' -a",
-    "gitclone": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\gitclone'",
+    "start": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\github' -a",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
     "build": "tsc -build src",
@@ -31,7 +29,6 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.6",
-    "nodemon": "^2.0.15",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   }

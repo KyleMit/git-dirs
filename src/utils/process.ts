@@ -1,5 +1,5 @@
 import { promisify } from 'util';
-import cp from 'child_process';
+import * as cp from 'child_process';
 const exec = promisify(cp.exec);
 
 export const cmd = async (text: string): Promise<string> => {
