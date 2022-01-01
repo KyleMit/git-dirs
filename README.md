@@ -32,6 +32,9 @@
   * Bundle Code
   * Don't ship anything client doesn't need
 * Fix `RangeError [ERR_CHILD_PROCESS_STDIO_MAXBUFFER]: stdout maxBuffer length exceeded`
+* Incremental progress updates
+* Remove tsconfig.json
+
 
 ## Commands
 
