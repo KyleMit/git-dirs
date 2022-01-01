@@ -1,9 +1,5 @@
-import { promisify } from 'util';
-import cp from 'child_process';
-const exec = promisify(cp.exec);
-
-export const cmd = async (text: string): Promise<string> => {
-    const { stdout, stderr } = await exec(text);
-    if (stderr) throw new Error(stderr)
-    return stdout
-}
+export * from './process';
+export * from './file';
+export * from './string';
+export * from './git';
+export * from './array';
