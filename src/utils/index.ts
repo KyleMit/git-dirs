@@ -2,12 +2,8 @@ import { promisify } from 'util';
 import cp from 'child_process';
 const exec = promisify(cp.exec);
 
-interface IExecOutput {
-    stdout: string;
-    stderr: string;
-}
-
-export const cmd = async (text: string): Promise<IExecOutput> => {
+export const cmd = async (text: string): Promise<string> => {
     const { stdout, stderr } = await exec(text);
-    return { stdout, stderr }
+    if (stderr) throw new Error(stderr)
+    return stdout
 }
