@@ -1,0 +1,29 @@
+{
+  "name": "@kylemit/git-for-each",
+  "version": "1.0.0",
+  "description": "Run git commands in all git subdirectories",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "status": "ts-node src/index.ts status"
+  },
+  "repository": "github:KyleMit/git-for-each",
+  "keywords": [
+    "cli",
+    "git"
+  ],
+  "author": "KyleMit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KyleMit/git-for-each/issues"
+  },
+  "homepage": "https://github.com/KyleMit/git-for-each#readme",
+  "dependencies": {
+    "@types/node": "^17.0.6",
+    "chalk": "^5.0.0",
+    "commander": "^8.3.0",
+    "inquirer": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.1.3"
+  }
+}
