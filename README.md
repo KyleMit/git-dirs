@@ -1,5 +1,7 @@
 # Git Dirs
 
+TODO npm
+
 > Run git commands in all git subdirectories
 
 ```none
@@ -11,11 +13,26 @@
   |___/
 ```
 
-```bash
-npx git-dirs status
-```
 
 ## Usage
+
+```npm
+npm install git-dirs -g
+```
+
+```bash
+npx git-dirs status [--short] [--filter dirty] [--sort status|alpha]
+npx git-dirs fetch
+npx git-dirs pull
+npx git-dirs checkout main       # checkout default branch
+npx git-dirs prune               # delete unnecessary branches
+npx git-dirs clean -dX --dry-run # view ignored files
+npx git-dirs clean -dX           # remove git ignore
+npx git-dirs xargs <whatever>
+```
+
+
+## Docs
 
 ```bash
 $ npx git-dirs help
@@ -45,65 +62,17 @@ $ npx git-dirs status
 #   -h, --help          display help for command
 ```
 
-
-## Features
-
-* Git Status
-  * sort alpha, sort by status
-* Checkout Main
-  * whatever default branch is
-* Pull Remote
-* Fetch
-* Delete Unnecessary Branches
-
-* Run in a folder, use sub-directories
-* Point to a folder?
-* For Each Folder in Dir
-
 ## Todo
 
-* Automate Deploy w/ Github Actions
-* Params, pass in dir to override (defaults to `./`)
-* Exec Child
-* Speed up npx download time
-  * Remove dependencies
-  * Bundle Code
-  * Don't ship anything client doesn't need
-* Incremental progress updates
+* [ ] Automate Deploy w/ Github Actions
+* [ ] Progress updates while downloading
+* [ ] Auto Update Docs
+* [ ] Add Commands
+  * [ ] Status short
 
-
-## Status
-
-* Sort
-  * By Status
-    * Clean
-    * Ahead
-    * Behind
-    * Dirty
-  * Alphabetically
-  * Filter
-    * Not Clean
-
-
-
-
-## Commands
-
-```bash
-git-fe status [-s] [--filter dirty] [--sort status|alpha]
-git-fe fetch
-git-fe pull
-git-fe checkout main
-git-fe prune
-git-fe clean -dX --dry-run
-git-fe clean -dX
-
-git-fe xargs <whatever>
-```
 
 
 ## Prior Art
-
 
 ### Stack Overflow
 
