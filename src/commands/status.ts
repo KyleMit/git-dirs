@@ -1,6 +1,6 @@
 import { Command, Option } from "commander"
-import { IStatusOptions, StatusFilterTypes, StatusOrderTypes } from "../models";
-import { boolCompare, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed } from "../utils"
+import { GitStatusGroups, IStatusOptions, StatusFilterTypes, StatusOrderTypes } from "../models";
+import { boolCompare, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printYellow } from "../utils"
 
 
 export const statusCmd = new Command('status')
@@ -31,11 +31,58 @@ async function statusAction(opts: IStatusOptions) {
             boolCompare(b.hasUnsyncedCommits, a.hasUnsyncedCommits)
         )
 
+    const grouped = filtered.reduce((acc, cur) => {
+            if (cur.isDirty) { acc.isDirty.push(cur); return acc; }
+            if (cur.hasUnmergedCommits) { acc.hasUnmergedCommits.push(cur); return acc; }
+            if (cur.hasUnsyncedCommits) { acc.hasUnsyncedCommits.push(cur); return acc; }
+
+            acc.upToDate.push(cur)
+            return acc;
+    }, new GitStatusGroups())
+
+    // todo hide sections behind flag
+    console.log('\n' + printYellow('Unsaved Changes'))
+    grouped.isDirty.forEach(repo => {
+        const name = printBold(printBlue(repo.name))
+        const branch = printDim(printBlue(`(${repo.branch})`))
+        const message = !opts.short
+            ? `\n ${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
+            : ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
+        console.log(`${name} ${branch}${message}`)
+    })
+
+    console.log('\n' + printYellow('Unpushed Commits'))
+    grouped.hasUnmergedCommits.forEach(repo => {
+        const name = printBold(printBlue(repo.name))
+        const branch = printDim(printBlue(`(${repo.branch})`))
+        const message = !opts.short
+            ? `\n ${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
+            : ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
+        console.log(`${name} ${branch}${message}`)
+    })
+
+    console.log('\n' + printYellow('Behind Origin'))
+    grouped.hasUnsyncedCommits.forEach(repo => {
+        const name = printBold(printBlue(repo.name))
+        const branch = printDim(printBlue(`(${repo.branch})`))
+        const message = !opts.short
+            ? `\n ${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
+            : ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
+        console.log(`${name} ${branch}${message}`)
+    })
+
+    console.log('\n' + printYellow('Up To Date'))
+    grouped.upToDate.forEach(repo => {
+        console.log(printGreen(repo.name) + ' ' + printDim(printGreen(`(${repo.branch})`)) + ' ' + 'Up to date')
+    })
+
     sorted.forEach(repo => {
-        const branch = printDim(printBlue(` (${repo.branch})`))
+        const repoName = printBold(printBlue(repo.name))
+        const branch = printDim(printBlue(`(${repo.branch})`))
+
         if (opts.short) {
             if (repo.hasUnsavedChanges) {
-                let msg = printBold(printBlue(repo.name)) + branch
+                let msg =  + branch
                 if (repo.isDirty) {
                     msg+= ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
                 } else {
