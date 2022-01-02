@@ -2,7 +2,7 @@ import { Command, Option } from "commander"
 import { stringify } from "querystring";
 import { GitStatusGroups, IStatusOptions, StatusFilterTypes, StatusOrderTypes } from "../models";
 import { IGitStatus } from "../models/models";
-import { boolCompare, formatNumber, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { boolCompare, colors, formatNumber, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
 export const statusCmd = new Command('status')
@@ -35,7 +35,12 @@ async function statusAction(opts: IStatusOptions) {
             return acc;
     }, new GitStatusGroups())
 
-    const modifiedRepo = (repo: IGitStatus) => `${printBold(printBlue(repo.name))} ${printDim(printBlue(`(${repo.branch})`))}`
+    const repoTitle = (repo: IGitStatus) => `${colors.bright}${repo.name} ${printDim(`(${repo.branch})`)}`
+    const modifiedRepoTitle = (repo: IGitStatus) => printBlue(repoTitle(repo))
+    const unsyncedRepoTitle = (repo: IGitStatus) => printCyan(repoTitle(repo))
+    const uptoDateRepoTitle = (repo: IGitStatus) => printGreen(repoTitle(repo))
+
+
     const modificationsCount = (repo: IGitStatus) => ` ${formatNumber(repo.modifiedCount.insertions)}(+) ${formatNumber(repo.modifiedCount.deletions)}(-)`
     const printHeader = (text: string) => {
         if (opts.hideHeaders) return;
@@ -46,25 +51,25 @@ async function statusAction(opts: IStatusOptions) {
         const message = !opts.short
             ? `\n${printRed(`Too many changes ${printDim('- run manually with:')}`)}\n${printUnderscore(`$ git -C '${repo.path}' status`)}\n`
             : ` ${modificationsCount(repo)}`
-        console.log(`${modifiedRepo(repo)}${message}`)
+        console.log(`${modifiedRepoTitle(repo)}${message}`)
     }
 
     const printChanges = (repo: IGitStatus) => {
         const message = !opts.short
             ? `\n${repo.status}`
             : ` ${modificationsCount(repo)}`
-        console.log(`${modifiedRepo(repo)}${message}`)
+        console.log(`${modifiedRepoTitle(repo)}${message}`)
     }
 
     const printUnsyncedCommits = (repo: IGitStatus) => {
         const message = !opts.short
             ? `\n${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
             : ` ${repo.diffCommitCount.ahead}↑ ${repo.diffCommitCount.behind}↓`
-        console.log(`${modifiedRepo(repo)}${message}`)
+        console.log(`${unsyncedRepoTitle(repo)}${message}`)
     }
 
     const printUpToDate = (repo: IGitStatus) => {
-        console.log(`${printGreen(repo.name)} (${printDim(printGreen(repo.branch))}) ${printDim('Up to date')}`)
+        console.log(`${uptoDateRepoTitle(repo)} ${printDim('Up to date')}`)
     }
 
     const printGroup = (header: string, repos: Array<IGitStatus>, printFn: (repo: IGitStatus) => void) => {

@@ -32,10 +32,10 @@ export const colors = {
     }
 } as const;
 
+export const printBold = (text: string) => `${colors.bright}${text}${colors.reset}`;
 export const printDim = (text: string) => `${colors.dim}${text}${colors.reset}`;
 export const printUnderscore = (text: string) => `${colors.underscore}${text}${colors.reset}`;
 
-export const printBold = (text: string) => `${colors.bright}${text}${colors.reset}`;
 export const printBlue = (text: string) => `${colors.fg.blue}${text}${colors.reset}`;
 export const printYellow = (text: string) => `${colors.fg.yellow}${text}${colors.reset}`;
 export const printCyan = (text: string) => `${colors.fg.cyan}${text}${colors.reset}`;
