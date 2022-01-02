@@ -13,6 +13,11 @@ export interface IStatusOptions {
     order: StatusOrderTypes
 }
 
+export interface IShortStatusInfo {
+    status: string;
+    tooManyChanges?: boolean;
+}
+
 export interface IGitStatus {
     path: string;
     name: string;
@@ -20,14 +25,17 @@ export interface IGitStatus {
     status: string;
     isDirty: boolean;
     tooManyChanges: boolean;
+    diffCommitCount: IDiffCommitCount;
+    modifiedCount: IModifiedCount
+
 }
 
-export interface IAheadBehindCount {
+export interface IDiffCommitCount {
     ahead: number | null;
     behind: number | null;
 }
 
-export interface IModifiedCounts {
+export interface IModifiedCount {
     files: number | null;
     insertions: number | null;
     deletions: number | null;

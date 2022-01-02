@@ -1,10 +1,10 @@
 import { cmd, filterAsync, getDirectories, getDirectoryName, trimNewLines, trimWhitespace } from "."
-import { IAheadBehindCount, IGitStatus, IModifiedCounts } from "../models";
+import { IDiffCommitCount, IGitStatus, IModifiedCount, IShortStatusInfo } from "../models";
 
 
 
 
-export const getGitShortStatus = async (path: string) => {
+export const getGitShortStatus = async (path: string): Promise<IShortStatusInfo> => {
     // https://git-scm.com/docs/git-status
     try {
         const resp = await cmd(`git -C ${path} status -s`)
@@ -15,13 +15,13 @@ export const getGitShortStatus = async (path: string) => {
 
 }
 
-export const getCurrentBranch = async (path: string) => {
+export const getCurrentBranch = async (path: string): Promise<string> => {
     // https://git-scm.com/docs/git-branch#Documentation/git-branch.txt---show-current
     const resp = await cmd(`git -C ${path} branch --show-current`)
     return trimWhitespace(resp) || 'Detached Head'
 }
 
-export const getModifiedCounts = async (path: string): Promise<IModifiedCounts> => {
+export const getModifiedCounts = async (path: string): Promise<IModifiedCount> => {
     // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---shortstat
     const resp = await cmd(`git -C ${path} diff --shortstat`)
     // get last line in cases there are warnings
@@ -38,10 +38,10 @@ export const getModifiedCounts = async (path: string): Promise<IModifiedCounts> 
     return { files, insertions, deletions }
 }
 
-export const getAheadBehindCount = async (path: string, branch?: string): Promise<IAheadBehindCount> => {
+export const getAheadBehindCount = async (path: string, branch?: string): Promise<IDiffCommitCount> => {
     // https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---count
     try {
-        const resp = await cmd(`git -C ${path} rev-list --count --left-right ${branch || 'HEAD'}...origin/${branch}`)
+        const resp = await cmd(`git -C ${path} rev-list --count --left-right ${branch || 'HEAD'}...@{upstream}`)
         const matches = resp.match(/(\d*)\s*(\d*)/)
         const [_, ahead, behind] = matches || []
         return {
@@ -77,7 +77,7 @@ export const getLocalDefaultBranchName = async (path: string): Promise<string> =
 }
 
 
-export const isGitDirectory = async (path: string) => {
+export const isGitDirectory = async (path: string): Promise<boolean> => {
     try {
         // https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---is-inside-work-tree
         const resp = await cmd(`git -C ${path} rev-parse --is-inside-work-tree`)
@@ -97,14 +97,23 @@ export const getGitDirectories = async (path: string): Promise<string[]> => {
 
 export const getGitStatusInfo = async (path: string): Promise<IGitStatus> => {
     const name = getDirectoryName(path);
-    const branch = await getCurrentBranch(path)
-    const { status, tooManyChanges } = await getGitShortStatus(path)
+
+    const [branch, statusInfo, diffCommitCount, modifiedCount] = await Promise.all([
+        getCurrentBranch(path),
+        getGitShortStatus(path),
+        getAheadBehindCount(path),
+        getModifiedCounts(path)
+    ])
+
+    const { status, tooManyChanges } = statusInfo
 
     return {
         name,
         path,
         status,
         branch,
+        diffCommitCount,
+        modifiedCount,
         isDirty: tooManyChanges || status != "",
         tooManyChanges: tooManyChanges || status.length > 1_000
     }
