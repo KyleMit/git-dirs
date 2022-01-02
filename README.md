@@ -57,25 +57,20 @@ $ npx git-dirs status --help
 # show the working tree status
 #
 # Options:
-#   -d, --dir <path>    path other than current directory
-#   -a, --show-all      show all repo statuses
-#   -s, --sort <order>  sort order (choices: "status", "alpha", default: "status")
-#   -h, --help          display help for command
+#   -d, --dir <path>       path other than current directory
+#   -s, --short            show statuses in a single line per repo
+#   -h, --hide-headers     hide group headers in output
+#   -f, --filter <filter>  filter results (choices: "all", "dirty", default: "all")
+#   --help                 display help for command
 ```
 
 ## Todo
 
 * [ ] Automate Deploy w/ Github Actions
-* [ ] Progress updates while downloading
-* [ ] Auto Update Docs
-* [ ] suppress LF warning
+* [ ] Show Progress updates while downloading
+* [ ] Auto Generate `--help` Docs
 * [ ] Add Commands
-  * [ ] Status short
-    * [ ] Format Number > 1000
-    * [ ] Fix Modification Count when missing value
-    * [ ] Group Output Option
-  * [ ] Add branch
-
+  * [ ] Restore Alpha Order
 
 
 ## Prior Art
