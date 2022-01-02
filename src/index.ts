@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
-import { createProgram } from "./cli"
+import { program } from 'commander';
+import { commands } from './commands';
+import { printDim, gitDirsDisplay } from "./utils";
 import { version } from "../package.json";
 
-main()
+export const main = async () => {
 
-async function main() {
-
-    const program = createProgram()
+    commands.forEach((cmd) => program.addCommand(cmd) )
+    program.addHelpText('before', printDim(gitDirsDisplay))
 
     await program
         .name("git-dirs")
@@ -15,3 +16,5 @@ async function main() {
         .parseAsync(process.argv);
 
 }
+
+main()
