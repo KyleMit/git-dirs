@@ -37,12 +37,14 @@ export const getCurrentBranch = async (path: string) => {
 
 export const getAheadBehindCount = async (path: string, branch: string) => {
     // https://git-scm.com/docs/git-branch#Documentation/git-branch.txt---show-current
-    const resp = await cmd(`git -C ${path} rev-list --count --left-right ${branch}...origin/${branch} `)
-    const matches = resp.match(/(\d*)\s*(\d*)/)
-    const [_, ahead, behind] = matches || []
-    return {
-        ahead,
-        behind
+    try {
+        const resp = await cmd(`git -C ${path} rev-list --count --left-right ${branch}...origin/${branch} `)
+        const matches = resp.match(/(\d*)\s*(\d*)/)
+        const [_, ahead, behind] = matches || []
+        return { ahead, behind }
+    } catch (error) {
+        // fatal: no upstream configured for branch 'feature'
+        return {ahead: null, behind: null}
     }
 }
 
