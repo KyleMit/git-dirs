@@ -32,26 +32,19 @@ export interface IGitStatus {
     hasUnsyncedCommits: boolean; // has unpushed or pulled commits
 }
 
-export interface IGitStatusGroups {
-    tooManyChanges: Array<IGitStatus>;
-    isDirty: Array<IGitStatus>;
-    hasUnmergedCommits: Array<IGitStatus>;
-    hasUnsyncedCommits: Array<IGitStatus>;
-    upToDate: Array<IGitStatus>;
-}
-
 export interface IDiffCommitCount {
-    ahead: number | null;
-    behind: number | null;
+    ahead: number;
+    behind: number;
 }
 
 export interface IModifiedCount {
-    files: number | null;
-    insertions: number | null;
-    deletions: number | null;
+    files: number;
+    insertions: number;
+    deletions: number;
 }
 
 export class GitStatusGroups {
+    tooManyChanges: Array<IGitStatus> = [];
     isDirty: Array<IGitStatus> = [];
     hasUnmergedCommits: Array<IGitStatus> = [];
     hasUnsyncedCommits: Array<IGitStatus> = [];

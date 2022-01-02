@@ -49,7 +49,7 @@ export const getAheadBehindCount = async (path: string, branch?: string): Promis
         }
     } catch (error) {
         // fatal: no upstream configured for branch 'feature'
-        return {ahead: null, behind: null}
+        return {ahead: 0, behind: 0}
     }
 }
 

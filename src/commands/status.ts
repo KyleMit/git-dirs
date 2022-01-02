@@ -1,7 +1,7 @@
 import { Command, Option } from "commander"
 import { GitStatusGroups, IStatusOptions, StatusFilterTypes, StatusOrderTypes } from "../models";
 import { IGitStatus } from "../models/models";
-import { boolCompare, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printYellow } from "../utils"
+import { boolCompare, formatNumber, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
 export const statusCmd = new Command('status')
@@ -23,16 +23,8 @@ async function statusAction(opts: IStatusOptions) {
         ? gitStatuses
         : gitStatuses.filter(r => r.hasUnsavedChanges)
 
-    const sorted = opts.order == StatusOrderTypes.alpha
-        ? filtered.sort((a, b) => a.name.localeCompare(b.name))
-        : filtered.sort((a, b) =>
-            boolCompare(b.tooManyChanges, a.tooManyChanges) ||
-            boolCompare(b.isDirty, a.isDirty) ||
-            boolCompare(b.hasUnmergedCommits, a.hasUnmergedCommits) ||
-            boolCompare(b.hasUnsyncedCommits, a.hasUnsyncedCommits)
-        )
-
-    const grouped = filtered.reduce((acc, cur) => {
+    const grouped: GitStatusGroups = filtered.reduce((acc, cur) => {
+            if (cur.tooManyChanges) { acc.tooManyChanges.push(cur); return acc; }
             if (cur.isDirty) { acc.isDirty.push(cur); return acc; }
             if (cur.hasUnmergedCommits) { acc.hasUnmergedCommits.push(cur); return acc; }
             if (cur.hasUnsyncedCommits) { acc.hasUnsyncedCommits.push(cur); return acc; }
@@ -42,72 +34,41 @@ async function statusAction(opts: IStatusOptions) {
     }, new GitStatusGroups())
 
     const modifiedRepo = (r: IGitStatus) => `${printBold(printBlue(r.name))} ${printDim(printBlue(`(${r.branch})`))}`
-    const cleanRepo = (r: IGitStatus) => `${printGreen(r.name)} (${printDim(printGreen(r.branch))})`
+    const modificationsCount = (r: IGitStatus) => ` ${formatNumber(r.modifiedCount.insertions)}(+) ${formatNumber(r.modifiedCount.deletions)}(-)`
 
     // todo hide sections behind flag
     console.log('\n' + printYellow('Unsaved Changes'))
+    grouped.tooManyChanges.forEach(repo => {
+        const message = !opts.short
+            ? `\n${printRed(`Too many changes ${printDim('- run manually with:')}`)}\n${printUnderscore(`$ git -C '${repo.path}' status`)}\n`
+            : ` ${modificationsCount(repo)}`
+        console.log(`${modifiedRepo(repo)}${message}`)
+    })
+
     grouped.isDirty.forEach(repo => {
         const message = !opts.short
-            ? `\n ${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
-            : ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
-        console.log(`${modifiedRepo(r)}${message}`)
+            ? `\n${repo.status}`
+            : ` ${modificationsCount(repo)}`
+        console.log(`${modifiedRepo(repo)}${message}`)
     })
+
+    const logSync = (r: IGitStatus) => {
+        const message = !opts.short
+            ? `\n${r.diffCommitCount.ahead} commits(s) ahead, ${r.diffCommitCount.behind} commits(s) behind`
+            : ` ${r.diffCommitCount.ahead}↑ ${r.diffCommitCount.behind}↓`
+        console.log(`${modifiedRepo(r)}${message}`)
+    }
 
     console.log('\n' + printYellow('Unpushed Commits'))
-    grouped.hasUnmergedCommits.forEach(repo => {
-        const message = !opts.short
-            ? `\n ${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
-            : ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
-        console.log(`${modifiedRepo(r)}${message}`)
-    })
+    grouped.hasUnmergedCommits.forEach(logSync)
 
     console.log('\n' + printYellow('Behind Origin'))
-    grouped.hasUnsyncedCommits.forEach(repo => {
-        const message = !opts.short
-            ? `\n ${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`
-            : ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
-        console.log(`${modifiedRepo(name)}${message}`)
-    })
+    grouped.hasUnsyncedCommits.forEach(logSync)
 
     console.log('\n' + printYellow('Up To Date'))
     grouped.upToDate.forEach(repo => {
-        console.log(`${cleanRepo(repo)} Up to date`)
+        console.log(`${printGreen(repo.name)} (${printDim(printGreen(repo.branch))}) ${printDim('Up to date')}`)
     })
 
-    sorted.forEach(repo => {
-        const repoName = printBold(printBlue(repo.name))
-        const branch = printDim(printBlue(`(${repo.branch})`))
-
-        if (opts.short) {
-            if (repo.hasUnsavedChanges) {
-                let msg =  + branch
-                if (repo.isDirty) {
-                    msg+= ` ${repo.modifiedCount.insertions}(+), ${repo.modifiedCount.deletions}(-)`
-                } else {
-                    msg+= ` ${repo.diffCommitCount.ahead}↑, ${repo.diffCommitCount.behind}↓`
-                }
-                console.log(msg)
-            } else {
-                console.log(printGreen(repo.name) + printDim(printGreen(` (${repo.branch})`)) + " Up to date")
-            }
-        } else {
-            if (repo.hasUnsavedChanges) {
-                console.log(printBold(printBlue(repo.name)) + branch)
-                if (repo.tooManyChanges) {
-                    console.log(printRed(`Too many changes - run manually with:\n$ git -C '${repo.path}' status`))
-                } else if (repo.isDirty) {
-                    console.log(repo.status)
-                } else {
-                    console.log(`${repo.diffCommitCount.ahead} commits(s) ahead, ${repo.diffCommitCount.behind} commits(s) behind`)
-                }
-                // add extra line if we're sorting by status
-                if (opts.order == StatusOrderTypes.status) {
-                    console.log()
-                }
-            } else {
-                console.log(printGreen(repo.name))
-            }
-        }
-
-    })
+    console.log()
 }
