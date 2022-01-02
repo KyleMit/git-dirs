@@ -35,6 +35,17 @@ export const getCurrentBranch = async (path: string) => {
     return trimWhitespace(resp) || 'Detached Head'
 }
 
+export const getAheadBehindCount = async (path: string, branch: string) => {
+    // https://git-scm.com/docs/git-branch#Documentation/git-branch.txt---show-current
+    const resp = await cmd(`git -C ${path} rev-list --count --left-right ${branch}...origin/${branch} `)
+    const matches = resp.match(/(\d*)\s*(\d*)/)
+    const [_, ahead, behind] = matches || []
+    return {
+        ahead,
+        behind
+    }
+}
+
 export const isGitDirectory = async (path: string) => {
     try {
         // https://git-scm.com/docs/git-rev-parse

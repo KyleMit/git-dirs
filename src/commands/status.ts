@@ -26,7 +26,7 @@ const statusAction = async (opts: IStatusOptions) => {
                 console.log(repo.status)
             }
         } else {
-            console.log(printGreen(repo.name) + branch)
+            console.log(printGreen(repo.name))
         }
     })
 
