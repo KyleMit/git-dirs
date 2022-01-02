@@ -7,3 +7,8 @@ export const cmd = async (text: string): Promise<string> => {
     if (stderr) throw new Error(stderr)
     return stdout
 }
+
+export const tryCmd = async (text: string): Promise<[string, string]> => {
+    const { stdout, stderr } = await exec(text);
+    return [ stdout, stderr ]
+}

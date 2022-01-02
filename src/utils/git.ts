@@ -1,4 +1,4 @@
-import { cmd, filterAsync, getDirectories, getDirectoryName, trimNewLines, trimWhitespace } from "."
+import { cmd, filterAsync, getDirectories, getDirectoryName, trimNewLines, trimWhitespace, tryCmd } from "."
 import { IDiffCommitCount, IGitStatus, IModifiedCount, IShortStatusInfo } from "../models";
 
 
@@ -23,14 +23,10 @@ export const getCurrentBranch = async (path: string): Promise<string> => {
 
 export const getModifiedCounts = async (path: string): Promise<IModifiedCount> => {
     // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---shortstat
-    const resp = await cmd(`git -C ${path} diff --shortstat`)
-    // get last line in cases there are warnings
-    const stats = trimNewLines(resp).split('\n').at(-1)
+    const [stats] = await tryCmd(`git -C ${path} diff --shortstat`)
 
     // if there's no line, there are no changes
-    if (!stats) {
-        return {files: 0, insertions: 0, deletions: 0}
-    }
+    if (!stats) { return {files: 0, insertions: 0, deletions: 0} }
 
     // ex.  4 files changed, 15 insertions(+), 5 deletions(-)
     const values = stats.split(",").map(val => Number(val.replace(/[^\d]/g,'')))
