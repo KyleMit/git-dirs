@@ -1,5 +1,5 @@
 import { cmd, filterAsync, getDirectories, getDirectoryName, trimNewLines, trimWhitespace, tryCmd } from "."
-import { IDiffCommitCount, IGitStatus, IModifiedCount, IShortStatusInfo } from "../models";
+import { IDiffCommitCount, IDirectory, IExecOutput, IGitStatus, IModifiedCount, IShortStatusInfo } from "../models";
 
 
 
@@ -21,9 +21,19 @@ export const getCurrentBranch = async (path: string): Promise<string> => {
     return trimWhitespace(resp) || 'Detached Head'
 }
 
+export const gitFetch = async (path: string, prune: boolean, dryRun: boolean): Promise<IExecOutput> => {
+    // https://git-scm.com/docs/git-fetch
+    const { success, info, error} = await tryCmd(`git -C ${path} fetch${prune ? ' --prune' : ''}${dryRun ? ' --dry-run' : ''}`)
+    return {
+        success: trimWhitespace(success),
+        info: trimWhitespace(info),
+        error: trimWhitespace(error)
+    }
+}
+
 export const getModifiedCounts = async (path: string): Promise<IModifiedCount> => {
     // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---shortstat
-    const [stats] = await tryCmd(`git -C ${path} diff --shortstat`)
+    const {success: stats} = await tryCmd(`git -C ${path} diff --shortstat`)
 
     // if there's no line, there are no changes
     if (!stats) { return {files: 0, insertions: 0, deletions: 0} }
@@ -87,15 +97,23 @@ export const isGitDirectory = async (path: string): Promise<boolean> => {
 }
 
 
-export const getGitDirectories = async (path: string): Promise<string[]> => {
+const getGitDirectories = async (path: string): Promise<string[]> => {
     if (await isGitDirectory(path)) return [path];
     const dirs = await getDirectories(path);
     const gitDirs = await filterAsync(dirs, isGitDirectory)
     return gitDirs
 }
 
-export const getGitStatusInfo = async (path: string): Promise<IGitStatus> => {
-    const name = getDirectoryName(path);
+export const getGitDirectoriesWithNames = async (path: string): Promise<IDirectory[]> => {
+    const gitDirs = await getGitDirectories(path)
+
+    return gitDirs.map(path => ({
+        path,
+        name: getDirectoryName(path)
+    }))
+}
+
+export const getGitStatusInfo = async ({path, name}: IDirectory): Promise<IGitStatus> => {
 
     const [branch, statusInfo, diffCommitCount, modifiedCount] = await Promise.all([
         getCurrentBranch(path),

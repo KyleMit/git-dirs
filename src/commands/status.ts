@@ -1,15 +1,14 @@
 import { Command, Option } from "commander"
-import { stringify } from "querystring";
-import { GitStatusGroups, IStatusOptions, StatusFilterTypes, StatusOrderTypes } from "../models";
+import { GitStatusGroups, IStatusOptions, StatusFilterTypes } from "../models";
 import { IGitStatus } from "../models/models";
-import { boolCompare, colors, formatNumber, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { colors, formatNumber, getCurrentWorkingDirectory, getGitDirectoriesWithNames, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
 export const statusCmd = new Command('status')
     .description('show the working tree status')
     .option('-d, --dir <path>', 'path other than current directory')
-    .option('-s, --short', 'show statuses in a single line per repo')
-    .option('-h, --hide-headers', 'hide group headers in output')
+    .option('-s, --short', 'show statuses in a single line per repo', false)
+    .option('-h, --hide-headers', 'hide group headers in output', false)
     .addOption(new Option('-f, --filter <filter>', 'filter results').choices(Object.values(StatusFilterTypes)).default(StatusFilterTypes.all))
     // .addOption(new Option('-o, --order <sort>', 'sort order').choices(Object.values(StatusOrderTypes)).default(StatusOrderTypes.status))
     .action(statusAction)
@@ -17,7 +16,7 @@ export const statusCmd = new Command('status')
 
 async function statusAction(opts: IStatusOptions) {
     const dir = opts.dir || getCurrentWorkingDirectory()
-    const gitDirs = await getGitDirectories(dir);
+    const gitDirs = await getGitDirectoriesWithNames(dir);
     const gitStatuses = await mapAsync(gitDirs, getGitStatusInfo)
 
 

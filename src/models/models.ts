@@ -6,12 +6,25 @@ export enum StatusFilterTypes {
     all = "all",
     dirty = "dirty"
 }
+
+export interface IExecOutput {
+    success?: string;
+    info?: string;
+    error?: string;
+}
+
 export interface IStatusOptions {
-    short?: boolean;
-    hideHeaders?: boolean;
     dir?: string;
+    short: boolean;
+    hideHeaders: boolean;
     filter: StatusFilterTypes;
     order: StatusOrderTypes
+}
+
+export interface IFetchOptions {
+    dir?: string;
+    prune: boolean;
+    dryRun: boolean;
 }
 
 export interface IShortStatusInfo {
@@ -19,9 +32,12 @@ export interface IShortStatusInfo {
     tooManyChanges?: boolean;
 }
 
-export interface IGitStatus {
+export interface IDirectory {
     path: string;
     name: string;
+}
+
+export interface IGitStatus extends IDirectory {
     branch: string;
     status: string;
     diffCommitCount: IDiffCommitCount;
