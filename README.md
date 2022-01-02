@@ -1,8 +1,8 @@
 # Git Dirs
 
-TODO npm
+[![npm version](https://badge.fury.io/js/git-dirs.svg)](https://www.npmjs.com/package/git-dirs)
 
-> Run git commands in all git subdirectories
+Run git commands in all git subdirectories
 
 ```none
           _   _                 _   _
