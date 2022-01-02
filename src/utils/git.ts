@@ -1,44 +1,39 @@
 import { cmd, filterAsync, getDirectories, getDirectoryName, trimWhitespace } from "."
+import { IGitStatus } from "../models";
 
-export interface IGitRepo {
-    path: string;
-    name: string;
-}
-export interface IGitStatusInfo extends IGitRepo {
-    status: string;
-    isDirty: boolean;
-    tooManyChanges: boolean;
-}
 
-export const getGitStatusInfo = async (path: string): Promise<IGitStatusInfo> => {
+
+export const getGitStatusInfo = async (path: string): Promise<IGitStatus> => {
     const name = getDirectoryName(path);
-    try {
-        const status = await getGitStatus(path)
-        return {
-            name,
-            path,
-            status,
-            isDirty: status != "",
-            tooManyChanges: status.length > 1_000
-        }
-    } catch (error) {
-        return {
-            name,
-            path,
-            status: 'Too Many Changes',
-            isDirty: true,
-            tooManyChanges: true
-        }
-    }
+    const branch = await getCurrentBranch(path)
+    const { status, tooManyChanges } = await getGitStatus(path)
 
+    return {
+        name,
+        path,
+        status,
+        branch,
+        isDirty: tooManyChanges || status != "",
+        tooManyChanges: tooManyChanges || status.length > 1_000
+    }
 }
 
 export const getGitStatus = async (path: string) => {
     // https://git-scm.com/docs/git-status
-    const resp = await cmd(`git -C ${path} status -s`)
-    return trimWhitespace(resp)
+    try {
+        const resp = await cmd(`git -C ${path} status -s`)
+        return { status: trimWhitespace(resp) }
+    } catch (error) {
+        return { status: "", tooManyChanges: true}
+    }
+
 }
 
+export const getCurrentBranch = async (path: string) => {
+    // https://git-scm.com/docs/git-branch#Documentation/git-branch.txt---show-current
+    const resp = await cmd(`git -C ${path} branch --show-current`)
+    return trimWhitespace(resp) || 'Detached Head'
+}
 
 export const isGitDirectory = async (path: string) => {
     try {

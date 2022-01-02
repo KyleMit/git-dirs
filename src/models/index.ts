@@ -7,7 +7,17 @@ export enum StatusFilterTypes {
     dirty = "dirty"
 }
 export interface IStatusOptions {
+    short?: boolean;
     dir?: string;
     filter: StatusFilterTypes;
-    sort: StatusOrderTypes
+    order: StatusOrderTypes
+}
+
+export interface IGitStatus {
+    path: string;
+    name: string;
+    branch: string;
+    status: string;
+    isDirty: boolean;
+    tooManyChanges: boolean;
 }

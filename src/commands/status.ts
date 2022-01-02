@@ -1,6 +1,6 @@
 import { Command, Option } from "commander"
 import { IStatusOptions, StatusFilterTypes, StatusOrderTypes } from "../models";
-import { boolCompare, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, IGitStatusInfo, mapAsync, printBlue, printBold, printGreen, printRed } from "../utils"
+import { boolCompare, getCurrentWorkingDirectory, getGitDirectories, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printGreen, printRed } from "../utils"
 
 const statusAction = async (opts: IStatusOptions) => {
     const dir = opts.dir || getCurrentWorkingDirectory()
@@ -12,20 +12,21 @@ const statusAction = async (opts: IStatusOptions) => {
         ? gitStatuses
         : gitStatuses.filter(r => r.isDirty)
 
-    const sorted = opts.sort == StatusOrderTypes.alpha
+    const sorted = opts.order == StatusOrderTypes.alpha
         ? filtered.sort((a, b) => a.name.localeCompare(b.name))
         : filtered.sort((a, b) => boolCompare(b.tooManyChanges, a.tooManyChanges) || boolCompare(b.isDirty, a.isDirty))
 
     sorted.forEach(repo => {
+        const branch = printCyan(` (${repo.branch})`)
         if (repo.isDirty) {
-            console.log(printBold(printBlue(repo.name)))
+            console.log(printBold(printBlue(repo.name)) + branch)
             if (repo.tooManyChanges) {
                 console.log(printRed(`Too many changes - run manually with:\n$ git -C '${repo.path}' status`))
             } else {
                 console.log(repo.status)
             }
         } else {
-            console.log(printGreen(repo.name))
+            console.log(printGreen(repo.name) + branch)
         }
     })
 

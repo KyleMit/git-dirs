@@ -1,3 +1,4 @@
+// https://i.imgur.com/Gk91f09.png
 export const colors = {
     reset: "\x1b[0m",
     bright: "\x1b[1m",
@@ -34,5 +35,6 @@ export const colors = {
 export const printDim = (text: string) => `${colors.dim}${text}${colors.reset}`;
 export const printBold = (text: string) => `${colors.bright}${text}${colors.reset}`;
 export const printBlue = (text: string) => `${colors.fg.blue}${text}${colors.reset}`;
+export const printCyan = (text: string) => `${colors.fg.cyan}${text}${colors.reset}`;
 export const printRed = (text: string) => `${colors.fg.red}${text}${colors.reset}`;
 export const printGreen = (text: string) => `${colors.fg.green}${text}${colors.reset}`;
