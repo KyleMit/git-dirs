@@ -8,6 +8,7 @@ export const statusCmd = new Command('status')
     .description('show the working tree status')
     .option('-d, --dir <path>', 'path other than current directory')
     .option('-s, --short', 'show statuses in a single line per repo')
+    .option('-h, --hide-headers', 'hide group headers in output')
     .addOption(new Option('-f, --filter <filter>', 'filter results').choices(Object.values(StatusFilterTypes)).default(StatusFilterTypes.all))
     .addOption(new Option('-o, --order <sort>', 'sort order').choices(Object.values(StatusOrderTypes)).default(StatusOrderTypes.status))
     .action(statusAction)
@@ -35,9 +36,14 @@ async function statusAction(opts: IStatusOptions) {
 
     const modifiedRepo = (r: IGitStatus) => `${printBold(printBlue(r.name))} ${printDim(printBlue(`(${r.branch})`))}`
     const modificationsCount = (r: IGitStatus) => ` ${formatNumber(r.modifiedCount.insertions)}(+) ${formatNumber(r.modifiedCount.deletions)}(-)`
+    const printHeader = (text: string) => {
+        if (opts.hideHeaders) return;
+        console.log('\n' + printYellow(text))
+    }
 
-    // todo hide sections behind flag
-    console.log('\n' + printYellow('Unsaved Changes'))
+
+
+    printHeader('Unsaved Changes')
     grouped.tooManyChanges.forEach(repo => {
         const message = !opts.short
             ? `\n${printRed(`Too many changes ${printDim('- run manually with:')}`)}\n${printUnderscore(`$ git -C '${repo.path}' status`)}\n`
@@ -59,13 +65,13 @@ async function statusAction(opts: IStatusOptions) {
         console.log(`${modifiedRepo(r)}${message}`)
     }
 
-    console.log('\n' + printYellow('Unpushed Commits'))
+    printHeader('Unpushed Commits')
     grouped.hasUnmergedCommits.forEach(logSync)
 
-    console.log('\n' + printYellow('Behind Origin'))
+    printHeader('Behind Origin')
     grouped.hasUnsyncedCommits.forEach(logSync)
 
-    console.log('\n' + printYellow('Up To Date'))
+    printHeader('Up To Date')
     grouped.upToDate.forEach(repo => {
         console.log(`${printGreen(repo.name)} (${printDim(printGreen(repo.branch))}) ${printDim('Up to date')}`)
     })

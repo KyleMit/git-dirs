@@ -4,7 +4,7 @@
   "description": "Run git commands in all git subdirectories",
   "bin": "./lib/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\gitclone' -s",
+    "start": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\gitclone' -s -h",
     "local": "npm i . -g && git-dirs",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",

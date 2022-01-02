@@ -8,6 +8,7 @@ export enum StatusFilterTypes {
 }
 export interface IStatusOptions {
     short?: boolean;
+    hideHeaders?: boolean;
     dir?: string;
     filter: StatusFilterTypes;
     order: StatusOrderTypes
