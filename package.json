@@ -1,10 +1,10 @@
 {
   "name": "git-dirs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Run git commands in all git subdirectories",
   "bin": "./lib/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\gitclone'",
+    "start": "ts-node src/index.ts status --dir 'C:\\Users\\kylemit\\Documents\\code\\gitclone' -s",
     "local": "npm i . -g && git-dirs",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",

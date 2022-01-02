@@ -23,11 +23,13 @@ export interface IGitStatus {
     name: string;
     branch: string;
     status: string;
-    isDirty: boolean;
-    tooManyChanges: boolean;
     diffCommitCount: IDiffCommitCount;
     modifiedCount: IModifiedCount
-
+    isDirty: boolean;            // has uncommitted files
+    hasUnsavedChanges: boolean;  // isDirty or has unpushed commits
+    tooManyChanges: boolean;     // changes too big to display
+    hasUnmergedCommits: boolean; // has unpushed commits
+    hasUnsyncedCommits: boolean; // has unpushed or pulled commits
 }
 
 export interface IDiffCommitCount {

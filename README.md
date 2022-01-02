@@ -71,6 +71,9 @@ $ npx git-dirs status --help
 * [ ] suppress LF warning
 * [ ] Add Commands
   * [ ] Status short
+    * [ ] Format Number > 1000
+    * [ ] Fix Modification Count when missing value
+    * [ ] Group Output Option
   * [ ] Add branch
 
 

@@ -28,9 +28,12 @@ export const getModifiedCounts = async (path: string): Promise<IModifiedCount> =
     // if there's no line, there are no changes
     if (!stats) { return {files: 0, insertions: 0, deletions: 0} }
 
-    // ex.  4 files changed, 15 insertions(+), 5 deletions(-)
-    const values = stats.split(",").map(val => Number(val.replace(/[^\d]/g,'')))
-    const [files, insertions, deletions] = values
+    // ex. 4 files changed, 15 insertions(+), 5 deletions(-)
+    // ex. 8 files changed, 595 deletions(-)
+    const files = Number(stats.match(/(\d+) files/)?.[1] || 0)
+    const insertions = Number(stats.match(/(\d+) insertions/)?.[1] || 0)
+    const deletions = Number(stats.match(/(\d+) deletions/)?.[1] || 0)
+
     return { files, insertions, deletions }
 }
 
@@ -102,6 +105,10 @@ export const getGitStatusInfo = async (path: string): Promise<IGitStatus> => {
     ])
 
     const { status, tooManyChanges } = statusInfo
+    const isDirty = Boolean(modifiedCount.files)
+    const hasUnmergedCommits = Boolean(diffCommitCount.ahead)
+    const hasUnsyncedCommits = Boolean(diffCommitCount.ahead || diffCommitCount.behind)
+    const hasUnsavedChanges = isDirty || hasUnmergedCommits
 
     return {
         name,
@@ -110,7 +117,10 @@ export const getGitStatusInfo = async (path: string): Promise<IGitStatus> => {
         branch,
         diffCommitCount,
         modifiedCount,
-        isDirty: tooManyChanges || status != "",
-        tooManyChanges: tooManyChanges || status.length > 1_000
+        isDirty,
+        hasUnsavedChanges,
+        tooManyChanges: tooManyChanges || status.length > 1_000,
+        hasUnmergedCommits: hasUnmergedCommits,
+        hasUnsyncedCommits: hasUnsyncedCommits
     }
 }
