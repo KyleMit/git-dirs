@@ -68,6 +68,7 @@ $ npx git-dirs status --help
 * [ ] Automate Deploy w/ Github Actions
 * [ ] Progress updates while downloading
 * [ ] Auto Update Docs
+* [ ] suppress LF warning
 * [ ] Add Commands
   * [ ] Status short
   * [ ] Add branch

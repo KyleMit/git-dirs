@@ -21,3 +21,14 @@ export interface IGitStatus {
     isDirty: boolean;
     tooManyChanges: boolean;
 }
+
+export interface IAheadBehindCount {
+    ahead: number | null;
+    behind: number | null;
+}
+
+export interface IModifiedCounts {
+    files: number | null;
+    insertions: number | null;
+    deletions: number | null;
+}
