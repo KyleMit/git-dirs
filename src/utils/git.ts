@@ -1,5 +1,5 @@
 import { cmd, filterAsync, getDirectories, getDirectoryName, trimNewLines, trimWhitespace, tryCmd } from "."
-import { IDiffCommitCount, IDirectory, IExecOutput, IGitStatus, IModifiedCount, IShortStatusInfo } from "../models";
+import { IBranch, IDiffCommitCount, IDirectory, IExecOutput, IGitStatus, IModifiedCount, IShortStatusInfo } from "../models";
 
 
 
@@ -19,6 +19,17 @@ export const getCurrentBranch = async (path: string): Promise<string> => {
     // https://git-scm.com/docs/git-branch#Documentation/git-branch.txt---show-current
     const resp = await cmd(`git -C ${path} branch --show-current`)
     return trimWhitespace(resp) || 'Detached Head'
+}
+
+export const getLocalBranches = async (path: string): Promise<IBranch[]> => {
+    // https://git-scm.com/docs/git-branch#Documentation/git-branch.txt---list
+    const resp = await cmd(`git -C ${path} branch --list`)
+    const branches = trimNewLines(resp).split('\n').map((b) => {
+        const isCurrent = b.startsWith('*')
+        const name = b.replace(/\*|\s/g,'')
+        return {name, isCurrent}
+    })
+    return branches
 }
 
 export const gitFetch = async (path: string, prune: boolean, dryRun: boolean): Promise<IExecOutput> => {

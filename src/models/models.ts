@@ -52,6 +52,21 @@ export interface IGitStatus extends IDirectory {
 
 export interface IGitFetch extends IDirectory, IExecOutput {}
 
+export interface IGitBranch extends IDirectory {
+    branches: IBranchWithStatus[];
+    hasMultiple: boolean;
+    hasOutOfDate: boolean;
+}
+
+export interface IBranch {
+    name: string;
+    isCurrent: boolean;
+}
+
+export interface IBranchWithStatus extends IBranch, IDiffCommitCount {
+    isDefault: boolean;
+}
+
 export interface IDiffCommitCount {
     ahead: number;
     behind: number;
@@ -75,4 +90,10 @@ export class GitFetchGroups {
     error: Array<IGitFetch> = [];
     updated: Array<IGitFetch> = [];
     clean: Array<IGitFetch> = [];
+}
+
+export class GitBranchGroups {
+    outOfDate: Array<IGitBranch> = [];
+    multiple: Array<IGitBranch> = [];
+    upToDate: Array<IGitBranch> = [];
 }

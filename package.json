@@ -4,7 +4,7 @@
   "description": "Run git commands in all git subdirectories",
   "bin": "./lib/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts fetch --dir 'C:\\Users\\kylemit\\Documents\\code\\github' --prune",
+    "start": "ts-node src/index.ts branch --dir 'C:\\Users\\kylemit\\Documents\\code\\github'",
     "local": "npm i . -g && git-dirs",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",

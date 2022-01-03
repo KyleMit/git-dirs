@@ -10,9 +10,9 @@
             "request": "launch",
             "args": [
                 "src/index.ts",
-                "status",
+                "branch",
                 "--dir",
-                "C:\\Users\\kylemit\\Documents\\code\\gitclone"
+                "C:\\Users\\kylemit\\Documents\\code\\github"
             ],
             "runtimeArgs": [
                 "--nolazy",
