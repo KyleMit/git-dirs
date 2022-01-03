@@ -25,6 +25,7 @@ export interface IFetchOptions {
     dir?: string;
     prune: boolean;
     dryRun: boolean;
+    hideHeaders: boolean;
 }
 
 export interface IShortStatusInfo {
@@ -49,6 +50,8 @@ export interface IGitStatus extends IDirectory {
     hasUnsyncedCommits: boolean; // has unpushed or pulled commits
 }
 
+export interface IGitFetch extends IDirectory, IExecOutput {}
+
 export interface IDiffCommitCount {
     ahead: number;
     behind: number;
@@ -66,4 +69,10 @@ export class GitStatusGroups {
     hasUnmergedCommits: Array<IGitStatus> = [];
     hasUnsyncedCommits: Array<IGitStatus> = [];
     upToDate: Array<IGitStatus> = [];
+}
+
+export class GitFetchGroups {
+    error: Array<IGitFetch> = [];
+    updated: Array<IGitFetch> = [];
+    clean: Array<IGitFetch> = [];
 }
