@@ -13,18 +13,30 @@ export interface IExecOutput {
     error?: string;
 }
 
-export interface IStatusOptions {
+export interface IBaseOptions {
     dir?: string;
+}
+export interface IModifyOptions {
+    dryRun: boolean;
+}
+
+export interface IStatusOptions extends IBaseOptions {
     short: boolean;
     hideHeaders: boolean;
     filter: StatusFilterTypes;
     order: StatusOrderTypes
 }
 
-export interface IFetchOptions {
-    dir?: string;
+export interface IFetchOptions extends IBaseOptions, IModifyOptions {
     prune: boolean;
-    dryRun: boolean;
+    hideHeaders: boolean;
+}
+
+export interface IBranchOptions extends IBaseOptions {
+    hideHeaders: boolean;
+}
+
+export interface IPullOptions extends IBaseOptions, IModifyOptions {
     hideHeaders: boolean;
 }
 
@@ -90,6 +102,11 @@ export class GitFetchGroups {
     error: Array<IGitFetch> = [];
     updated: Array<IGitFetch> = [];
     clean: Array<IGitFetch> = [];
+}
+
+export class GitPullGroups {
+    error: Array<IGitFetch> = [];
+    updated: Array<IGitFetch> = [];
 }
 
 export class GitBranchGroups {

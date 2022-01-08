@@ -21,14 +21,17 @@ npm install git-dirs -g
 ```
 
 ```bash
+# view
 npx git-dirs status -s           # show status of each repo
+npx git-dirs branch              # view branches in each repo
+
+# update
 npx git-dirs fetch               # download objects in each repo
+npx git-dirs pull                # pull out of date repos
 
 # todo
-npx git-dirs branch              # view branches in each repo
-npx git-dirs pull                # pull origin into local in each repo
 npx git-dirs checkout <branch>   # checkout branch in each repo
-npx git-dirs prune               # delete unnecessary local -0branches
+npx git-dirs prune               # delete unnecessary local -branches
 npx git-dirs clean -dX --dry-run # view ignored files
 npx git-dirs clean -dX           # remove git ignore
 npx git-dirs xargs <whatever>    # run any command against all child repos
@@ -71,8 +74,20 @@ $ npx git-dirs status --help
 * [ ] Automate Deploy w/ Github Actions
 * [ ] Show Progress updates while downloading
 * [ ] Auto Generate `--help` Docs
+* [ ] Add `-i|--interactive` flag
+* [ ] Add `-f|--force` flag
+* [ ] Add Alpha Order (Sort)
+
+    ```ts
+    .addOption(new Option('-o, --order <sort>', 'sort order').choices(Object.values(StatusOrderTypes)).default(StatusOrderTypes.status))
+    ```
+
 * [ ] Add Commands
-  * [ ] Restore Alpha Order
+  * [ ] checkout # checkout branch in each repo
+  * [ ] prune # delete unnecessary local -0branches
+  * [ ] clean # view ignored files
+  * [ ] clean # remove git ignore
+  * [ ] xargs # run any command again
 
 
 ---

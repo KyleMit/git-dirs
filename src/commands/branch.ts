@@ -1,5 +1,5 @@
 import { Command } from "commander"
-import { GitBranchGroups, GitFetchGroups, IBranchWithStatus, IDirectory, IFetchOptions, IGitBranch, IGitFetch, IGitStatus } from "../models";
+import { GitBranchGroups, GitFetchGroups, IBranchOptions, IBranchWithStatus, IDirectory, IFetchOptions, IGitBranch, IGitFetch, IGitStatus } from "../models";
 import { boolCompare, colors, getAheadBehindCount, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, getLocalBranches, getRemoteDefaultBranchName, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
@@ -11,7 +11,7 @@ export const branchCmd = new Command('branch')
 
 
 
-async function branchAction(opts: IFetchOptions) {
+async function branchAction(opts: IBranchOptions) {
     const dir = getDirectoryPath(opts.dir)
     const gitDirs = await getGitDirectoriesWithNames(dir);
 

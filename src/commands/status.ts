@@ -10,7 +10,6 @@ export const statusCmd = new Command('status')
     .option('-s, --short', 'show statuses in a single line per repo', false)
     .option('-h, --hide-headers', 'hide group headers in output', false)
     .addOption(new Option('-f, --filter <filter>', 'filter results').choices(Object.values(StatusFilterTypes)).default(StatusFilterTypes.all))
-    // .addOption(new Option('-o, --order <sort>', 'sort order').choices(Object.values(StatusOrderTypes)).default(StatusOrderTypes.status))
     .action(statusAction)
 
 
@@ -78,8 +77,8 @@ async function statusAction(opts: IStatusOptions) {
 
     printGroup('Too Many Changes', grouped.tooManyChanges, printTooManyChanges)
     printGroup('Unsaved Changes', grouped.isDirty, printChanges)
-    printGroup('Unpushed Commits', grouped.hasUnmergedCommits, printUnsyncedCommits)
-    printGroup('Behind Origin', grouped.hasUnsyncedCommits, printUnsyncedCommits)
+    printGroup('Ahead', grouped.hasUnmergedCommits, printUnsyncedCommits)
+    printGroup('Behind', grouped.hasUnsyncedCommits, printUnsyncedCommits)
     printGroup('Up To Date', grouped.upToDate, printUpToDate)
 
     console.log()

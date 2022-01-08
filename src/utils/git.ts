@@ -42,6 +42,16 @@ export const gitFetch = async (path: string, prune: boolean, dryRun: boolean): P
     }
 }
 
+export const gitPull = async (path: string,  dryRun: boolean): Promise<IExecOutput> => {
+    // https://git-scm.com/docs/git-pull
+    const { success, info, error} = await tryCmd(`git -C ${path} pull${dryRun ? ' --dry-run' : ''}`)
+    return {
+        success: trimWhitespace(success),
+        info: trimWhitespace(info),
+        error: trimWhitespace(error)
+    }
+}
+
 export const getModifiedCounts = async (path: string): Promise<IModifiedCount> => {
     // https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---shortstat
     const {success: stats} = await tryCmd(`git -C ${path} diff --shortstat`)
