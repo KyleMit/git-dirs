@@ -1,6 +1,6 @@
 import { Command } from "commander"
 import { GitFetchGroups, IDirectory, IFetchOptions, IGitFetch, IGitStatus } from "../models/models";
-import { colors, getCurrentWorkingDirectory, getGitDirectoriesWithNames, getGitStatusInfo, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { colors, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
 export const fetchCmd = new Command('fetch')
@@ -14,7 +14,7 @@ export const fetchCmd = new Command('fetch')
 
 
 async function fetchAction(opts: IFetchOptions) {
-    const dir = opts.dir || getCurrentWorkingDirectory()
+    const dir = getDirectoryPath(opts.dir)
     const gitDirs = await getGitDirectoriesWithNames(dir);
 
     const gitDirsFetched: IGitFetch[] = await mapAsync(gitDirs, async (dir) => {

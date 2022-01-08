@@ -1,4 +1,4 @@
-import { basename, dirname, join } from 'path';
+import { basename, dirname, join, isAbsolute } from 'path';
 import { promises as fs } from 'fs';
 const { readdir } = fs
 
@@ -9,6 +9,14 @@ export const getDirectories = async (source: string): Promise<string[]> =>
             .filter(f => f.isDirectory())
             .map(d => join(source, d.name));
     }
+
+export const getDirectoryPath = (argDir?: string) => {
+  if (argDir && isAbsolute(argDir)) return argDir
+  if (argDir) return join(getCurrentWorkingDirectory(), argDir)
+
+  return getCurrentWorkingDirectory();
+
+}
 
 export const getCurrentWorkingDirectory = () => process.cwd()
 

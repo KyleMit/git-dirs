@@ -1,6 +1,6 @@
 import { Command } from "commander"
 import { GitBranchGroups, GitFetchGroups, IBranchWithStatus, IDirectory, IFetchOptions, IGitBranch, IGitFetch, IGitStatus } from "../models";
-import { boolCompare, colors, getAheadBehindCount, getCurrentWorkingDirectory, getGitDirectoriesWithNames, getGitStatusInfo, getLocalBranches, getRemoteDefaultBranchName, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { boolCompare, colors, getAheadBehindCount, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, getLocalBranches, getRemoteDefaultBranchName, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
 export const branchCmd = new Command('branch')
@@ -12,7 +12,7 @@ export const branchCmd = new Command('branch')
 
 
 async function branchAction(opts: IFetchOptions) {
-    const dir = opts.dir || getCurrentWorkingDirectory()
+    const dir = getDirectoryPath(opts.dir)
     const gitDirs = await getGitDirectoriesWithNames(dir);
 
     const gitBranchesWithStatus = await mapAsync(gitDirs, async (dir) => {
@@ -36,8 +36,8 @@ async function branchAction(opts: IFetchOptions) {
     })
 
     const grouped: GitBranchGroups = gitBranchesWithStatus.reduce((acc, cur) => {
-        if (cur.hasOutOfDate) { acc.outOfDate.push(cur); return acc; }
         if (cur.hasMultiple) { acc.multiple.push(cur); return acc; }
+        if (cur.hasOutOfDate) { acc.outOfDate.push(cur); return acc; }
 
         acc.upToDate.push(cur)
         return acc;
@@ -48,7 +48,7 @@ async function branchAction(opts: IFetchOptions) {
         const printDiff = (b: IBranchWithStatus) => ` ${b.ahead}↑ ${b.behind}↓`
         let header = printBlue(printBold(repo.name));
         if (!repo.hasMultiple) {
-            header += printBlue(printDim(` ${repo.branches[0].name}`))
+            header += printCyan(printBold(` (${repo.branches[0].name})`))
             if (repo.hasOutOfDate) {
                 header += ` ${printDiff(repo.branches[0])}`
             }
@@ -74,8 +74,8 @@ async function branchAction(opts: IFetchOptions) {
         repos.forEach(printFn)
     }
 
-    printGroup('Out of Date', grouped.outOfDate, printBranchResults)
     printGroup('Multiple', grouped.multiple, printBranchResults)
-    printGroup('Single', grouped.upToDate, printBranchResults)
+    printGroup('Out of Date', grouped.outOfDate, printBranchResults)
+    printGroup('Current', grouped.upToDate, printBranchResults)
     console.log()
 }

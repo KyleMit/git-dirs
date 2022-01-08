@@ -12,7 +12,7 @@
                 "src/index.ts",
                 "branch",
                 "--dir",
-                "C:\\Users\\kylemit\\Documents\\code\\github"
+                ".."
             ],
             "runtimeArgs": [
                 "--nolazy",

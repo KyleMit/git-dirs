@@ -1,7 +1,7 @@
 import { Command, Option } from "commander"
 import { GitStatusGroups, IStatusOptions, StatusFilterTypes } from "../models";
 import { IGitStatus } from "../models/models";
-import { colors, formatNumber, getCurrentWorkingDirectory, getGitDirectoriesWithNames, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { colors, formatNumber, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
 export const statusCmd = new Command('status')
@@ -15,7 +15,7 @@ export const statusCmd = new Command('status')
 
 
 async function statusAction(opts: IStatusOptions) {
-    const dir = opts.dir || getCurrentWorkingDirectory()
+    const dir = getDirectoryPath(opts.dir)
     const gitDirs = await getGitDirectoriesWithNames(dir);
     const gitStatuses = await mapAsync(gitDirs, getGitStatusInfo)
 
