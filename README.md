@@ -80,6 +80,7 @@ $ npx git-dirs status --help
 * [ ] Add `-i|--interactive` flag
 * [ ] Add `-r|--recursive` flag
 * [ ] Add `-f|--force` flag
+* [ ] Cap pull output at `n` lines (unless `-v|--verbose` flag)
 * [ ] Add Alpha Order (Sort)
 
     ```ts
