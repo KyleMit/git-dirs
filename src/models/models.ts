@@ -16,6 +16,8 @@ export interface IExecOutput {
 export interface IBaseOptions {
     dir?: string;
 }
+
+
 export interface IModifyOptions {
     dryRun: boolean;
 }
@@ -39,6 +41,11 @@ export interface IBranchOptions extends IBaseOptions {
 export interface IPullOptions extends IBaseOptions, IModifyOptions {
     hideHeaders: boolean;
 }
+
+export interface IXargsOptions extends IBaseOptions {
+    hideHeaders: boolean;
+}
+
 
 export interface IShortStatusInfo {
     status: string;

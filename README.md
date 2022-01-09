@@ -29,12 +29,14 @@ npx git-dirs branch              # view branches in each repo
 npx git-dirs fetch               # download objects in each repo
 npx git-dirs pull                # pull out of date repos
 
+# other
+npx git-dirs xargs <whatever>    # run any command against all child repos
+
 # todo
 npx git-dirs checkout <branch>   # checkout branch in each repo
 npx git-dirs prune               # delete unnecessary local -branches
-npx git-dirs clean -dX --dry-run # view ignored files
+npx git-dirs check-ignore        # view ignored files
 npx git-dirs clean -dX           # remove git ignore
-npx git-dirs xargs <whatever>    # run any command against all child repos
 ```
 
 
@@ -75,6 +77,7 @@ $ npx git-dirs status --help
 * [ ] Show Progress updates while downloading
 * [ ] Auto Generate `--help` Docs
 * [ ] Add `-i|--interactive` flag
+* [ ] Add `-r|--recursive` flag
 * [ ] Add `-f|--force` flag
 * [ ] Add Alpha Order (Sort)
 
@@ -87,7 +90,6 @@ $ npx git-dirs status --help
   * [ ] prune # delete unnecessary local -0branches
   * [ ] clean # view ignored files
   * [ ] clean # remove git ignore
-  * [ ] xargs # run any command again
 
 
 ---

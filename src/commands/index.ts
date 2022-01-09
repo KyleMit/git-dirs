@@ -2,11 +2,13 @@ import { statusCmd } from './status'
 import { fetchCmd } from './fetch'
 import { branchCmd } from './branch'
 import { pullCmd } from './pull'
+import { xargsCmd } from './xargs'
 
 
 export const commands = [
     statusCmd,
     fetchCmd,
     branchCmd,
-    pullCmd
+    pullCmd,
+    xargsCmd
 ]

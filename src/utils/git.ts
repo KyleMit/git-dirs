@@ -42,9 +42,19 @@ export const gitFetch = async (path: string, prune: boolean, dryRun: boolean): P
     }
 }
 
-export const gitPull = async (path: string,  dryRun: boolean): Promise<IExecOutput> => {
+export const gitPull = async (path: string, dryRun: boolean): Promise<IExecOutput> => {
     // https://git-scm.com/docs/git-pull
     const { success, info, error} = await tryCmd(`git -C ${path} pull${dryRun ? ' --dry-run' : ''}`)
+    return {
+        success: trimWhitespace(success),
+        info: trimWhitespace(info),
+        error: trimWhitespace(error)
+    }
+}
+
+export const gitExec = async (path: string, cmd: string): Promise<IExecOutput> => {
+    // https://git-scm.com/docs/git-pull
+    const { success, info, error} = await tryCmd(`git -C "${path}" ${cmd}`)
     return {
         success: trimWhitespace(success),
         info: trimWhitespace(info),

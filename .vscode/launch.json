@@ -10,7 +10,8 @@
             "request": "launch",
             "args": [
                 "src/index.ts",
-                "branch",
+                "xargs",
+                "status",
                 "--dir",
                 ".."
             ],
