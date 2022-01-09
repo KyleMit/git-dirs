@@ -42,6 +42,17 @@ export const gitFetch = async (path: string, prune: boolean, dryRun: boolean): P
     }
 }
 
+export const gitClean = async (path: string, dryRun: boolean): Promise<IExecOutput> => {
+    // https://git-scm.com/docs/git-clean
+    const { success, info, error} = await tryCmd(`git -C ${path} clean -dX ${dryRun ? ' --dry-run' : '--force'}`)
+    return {
+        success: trimWhitespace(success),
+        info: trimWhitespace(info),
+        error: trimWhitespace(error)
+    }
+}
+
+
 export const gitCheckIgnore = async (path: string): Promise<IExecOutput> => {
     // clean is easier to parse than check-ignore
     // https://git-scm.com/docs/git-clean

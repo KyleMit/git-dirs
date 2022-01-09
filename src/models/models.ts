@@ -24,30 +24,29 @@ export interface IGroupedOutput extends IBaseOptions {
 
 export interface IModifyOptions {
     dryRun: boolean;
+    force: boolean;
 }
 
-export interface IStatusOptions extends IBaseOptions {
+export interface IStatusOptions extends IGroupedOutput {
     short: boolean;
-    hideHeaders: boolean;
     filter: StatusFilterTypes;
     order: StatusOrderTypes
 }
 
-export interface IFetchOptions extends IBaseOptions, IModifyOptions {
+export interface IFetchOptions extends IGroupedOutput, IModifyOptions {
     prune: boolean;
-    hideHeaders: boolean;
 }
 
-export interface IBranchOptions extends IBaseOptions {
-    hideHeaders: boolean;
+export interface IBranchOptions extends IGroupedOutput {
 }
 
-export interface IPullOptions extends IBaseOptions, IModifyOptions {
-    hideHeaders: boolean;
+export interface IPullOptions extends IGroupedOutput, IModifyOptions {
 }
 
-export interface IXargsOptions extends IBaseOptions {
-    hideHeaders: boolean;
+export interface ICleanOptions extends IGroupedOutput, IModifyOptions {
+}
+
+export interface IXargsOptions extends IGroupedOutput {
 }
 
 

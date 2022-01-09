@@ -24,19 +24,20 @@ npm install git-dirs -g
 # view
 npx git-dirs status -s           # show status of each repo
 npx git-dirs branch              # view branches in each repo
+npx git-dirs check-ignore        # view ignored files
 
 # update
 npx git-dirs fetch               # download objects in each repo
 npx git-dirs pull                # pull out of date repos
+npx git-dirs clean               # remove ignored files
 
 # other
 npx git-dirs xargs <whatever>    # run any command against all child repos
 
 # todo
-npx git-dirs checkout <branch>   # checkout branch in each repo
+npx git-dirs checkout [default]  # checkout branch in each repo
 npx git-dirs prune               # delete unnecessary local -branches
-npx git-dirs check-ignore        # view ignored files
-npx git-dirs clean -dX           # remove git ignore
+npx git-dirs clone <project>     # delete unnecessary local -branches
 ```
 
 
