@@ -1,11 +1,11 @@
 import { Command } from "commander"
 import { GitPullGroups, IXargsOptions, IGitFetch } from "../models";
-import { getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, gitExec, mapAsync, printBlue, printBold, printRed, printYellow } from "../utils"
-
+import { getDirectoryPath, getGitDirectoriesWithNames, gitExec, mapAsync } from "../utils"
+import { printBlue, printBold, printRed, printYellow } from "../utils/console"
 
 export const xargsCmd = new Command('xargs')
     .argument('<command>', 'command to execute on all repos')
-    .description('Download objects and refs from a remote repository')
+    .description('Run arbitrary git commands against all subdirectories')
     .option('-d, --dir <path>', 'path other than current directory')
     .option('-h, --hide-headers', 'hide group headers in output', false)
     .action(xargsAction)

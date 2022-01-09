@@ -1,31 +1,28 @@
 import { Command } from "commander"
-import { GitFetchGroups, IFetchOptions, IGitFetch } from "../models";
-import { getDirectoryPath, getGitDirectoriesWithNames, gitFetch, mapAsync } from "../utils";
-import { printBlue, printBold, printRed, printYellow } from "../utils/console";
+import { GitFetchGroups, IDirectory, IFetchOptions, IGitFetch, IGitStatus, IGroupedOutput } from "../models";
+import { colors, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, gitCheckIgnore, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
 
 
-export const fetchCmd = new Command('fetch')
-    .description('Download objects and refs from a remote repository')
+export const checkIgnoreCmd = new Command('check-ignore')
+    .description('Show files ignored by git')
     .option('-d, --dir <path>', 'path other than current directory')
-    .option('-p, --prune', 'remove any remote-tracking references that no longer exist on the remote', false)
-    .option('-n, --dry-run', 'show what would be done, without making any changes.', false)
     .option('-h, --hide-headers', 'hide group headers in output', false)
-    .action(fetchAction)
+    .action(checkIgnoreAction)
 
 
 
-async function fetchAction(opts: IFetchOptions) {
+async function checkIgnoreAction(opts: IGroupedOutput) {
     const dir = getDirectoryPath(opts.dir)
     const gitDirs = await getGitDirectoriesWithNames(dir);
 
     const gitDirsFetched: IGitFetch[] = await mapAsync(gitDirs, async (dir) => {
-        const resp = await gitFetch(dir.path, opts.prune, opts.dryRun);
+        const resp = await gitCheckIgnore(dir.path);
         return {...dir, ...resp}
     })
 
     const grouped: GitFetchGroups = gitDirsFetched.reduce((acc, cur) => {
         if (cur.error) { acc.error.push(cur); return acc; }
-        if (cur.info) { acc.updated.push(cur); return acc; }
+        if (cur.success) { acc.updated.push(cur); return acc; }
 
         acc.clean.push(cur)
         return acc;
@@ -47,8 +44,8 @@ async function fetchAction(opts: IFetchOptions) {
         repos.forEach(printFn)
     }
 
-    printGroup('Fetch Error', grouped.error, printFetchResults)
-    printGroup('Fetch Success', grouped.updated, printFetchResults)
+    printGroup('Error', grouped.error, printFetchResults)
+    printGroup('Ignored Files', grouped.updated, printFetchResults)
     printGroup('Clean', grouped.clean, printFetchResults)
     console.log()
 }

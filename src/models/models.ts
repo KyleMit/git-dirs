@@ -17,6 +17,10 @@ export interface IBaseOptions {
     dir?: string;
 }
 
+export interface IGroupedOutput extends IBaseOptions {
+    hideHeaders: boolean;
+}
+
 
 export interface IModifyOptions {
     dryRun: boolean;

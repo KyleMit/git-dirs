@@ -1,6 +1,7 @@
 import { Command } from "commander"
-import { GitBranchGroups, GitFetchGroups, IBranchOptions, IBranchWithStatus, IDirectory, IFetchOptions, IGitBranch, IGitFetch, IGitStatus } from "../models";
-import { boolCompare, colors, getAheadBehindCount, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, getLocalBranches, getRemoteDefaultBranchName, gitFetch, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { GitBranchGroups, IBranchOptions, IBranchWithStatus, IGitBranch } from "../models";
+import { boolCompare, getAheadBehindCount, getDirectoryPath, getGitDirectoriesWithNames, getLocalBranches, getRemoteDefaultBranchName, mapAsync } from "../utils"
+import { printBlue, printBold, printCyan, printGreen, printYellow} from "../utils/console";
 
 
 export const branchCmd = new Command('branch')

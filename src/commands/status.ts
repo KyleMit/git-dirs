@@ -1,11 +1,11 @@
 import { Command, Option } from "commander"
-import { GitStatusGroups, IStatusOptions, StatusFilterTypes } from "../models";
-import { IGitStatus } from "../models/models";
-import { colors, formatNumber, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { GitStatusGroups, IStatusOptions, StatusFilterTypes, IGitStatus } from "../models";
+import { formatNumber, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, mapAsync } from "../utils";
+import { colors, printBlue, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils/console";
 
 
 export const statusCmd = new Command('status')
-    .description('show the working tree status')
+    .description('show the status of each repository')
     .option('-d, --dir <path>', 'path other than current directory')
     .option('-s, --short', 'show statuses in a single line per repo', false)
     .option('-h, --hide-headers', 'hide group headers in output', false)

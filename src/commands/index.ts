@@ -3,6 +3,7 @@ import { fetchCmd } from './fetch'
 import { branchCmd } from './branch'
 import { pullCmd } from './pull'
 import { xargsCmd } from './xargs'
+import { checkIgnoreCmd } from './check-ignore'
 
 
 export const commands = [
@@ -10,5 +11,6 @@ export const commands = [
     fetchCmd,
     branchCmd,
     pullCmd,
-    xargsCmd
+    xargsCmd,
+    checkIgnoreCmd
 ]

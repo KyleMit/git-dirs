@@ -1,10 +1,11 @@
 import { Command } from "commander"
-import { GitFetchGroups, GitPullGroups, IBaseOptions, IDirectory, IFetchOptions, IGitFetch, IGitStatus, IPullOptions } from "../models/models";
-import { colors, getCurrentWorkingDirectory, getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, gitFetch, gitPull, mapAsync, printBlue, printBold, printCyan, printDim, printGreen, printRed, printUnderscore, printYellow } from "../utils"
+import { GitPullGroups, IGitFetch, IPullOptions } from "../models";
+import { getDirectoryPath, getGitDirectoriesWithNames, getGitStatusInfo, gitPull, mapAsync } from "../utils";
+import { printBlue, printBold, printRed, printYellow } from "../utils/console";
 
 
 export const pullCmd = new Command('pull')
-    .description('Download objects and refs from a remote repository')
+    .description('Fetch from and integrate with origin branch')
     .option('-d, --dir <path>', 'path other than current directory')
     .option('-h, --hide-headers', 'hide group headers in output', false)
     .option('-n, --dry-run', 'show what would be done, without making any changes.', false)
